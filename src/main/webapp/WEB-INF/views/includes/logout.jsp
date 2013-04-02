@@ -1,0 +1,1 @@
+<a href="/foodecalc/j_spring_security_logout">Logout</a>

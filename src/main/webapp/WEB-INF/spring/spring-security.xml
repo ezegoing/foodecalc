@@ -1,0 +1,39 @@
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xmlns:beans="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/security
+	http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+	<http pattern="/home" security="none"/>
+		
+	<security:http auto-config="true" >
+		<security:intercept-url pattern="/secure/**" access="ROLE_USER" />
+		    	
+    	<form-login login-page="/" default-target-url="/secure/dash"
+			authentication-failure-url="/loginfailed" />
+		<logout logout-success-url="/logout" />
+	</security:http>
+
+	<beans:bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+        <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+        <beans:property name="url" value="jdbc:mysql://localhost:3306/foodecalc"/>
+        <beans:property name="username" value="root"/>
+        <beans:property name="password" value="ezegoing"/>
+		<beans:property name="initialSize" value="5" />
+		<beans:property name="maxActive" value="10" />
+    </beans:bean>
+   
+	<beans:bean id="passwordEncoder" 
+   			class="org.springframework.security.crypto.password.StandardPasswordEncoder" />
+   
+	<security:authentication-manager>
+		<security:authentication-provider>
+			<password-encoder ref="passwordEncoder" />
+				
+			<jdbc-user-service data-source-ref="dataSource"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+
+</beans:beans>
